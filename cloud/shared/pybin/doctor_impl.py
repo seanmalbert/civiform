@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 from lib.check import Check
 import platform
 
@@ -9,6 +7,7 @@ is_mac = detected_platform == 'Darwin'
 
 if not is_linux and not is_mac:
     raise RuntimeError("Only Linux and macOS are supported.")
+
 
 class DockerCheck(Check):
     remedy = "Need to install Docker CLI: https://docs.docker.com/engine/install/"
@@ -22,6 +21,7 @@ class DockerCheck(Check):
     def is_ok(self):
         return self._check_command_succeeds(["docker", "--version"])
 
+
 class TerraformCheck(Check):
     remedy = "Need to install Terraform CLI: https://learn.hashicorp.com/tutorials/terraform/install-cli"
 
@@ -30,6 +30,7 @@ class TerraformCheck(Check):
 
     def is_ok(self):
         return self._check_command_succeeds(["terraform", "-version"])
+
 
 class JavaCheck(Check):
     def name(self):
@@ -50,6 +51,7 @@ class JavaCheck(Check):
             https://docs.oracle.com/javase/9/install/installation-jdk-and-jre-macos.htm#JSJIG-GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE
         """
 
+
 class KeytoolCheck(Check):
     def name(self):
         return "Java Keytool"
@@ -69,6 +71,7 @@ class KeytoolCheck(Check):
             https://docs.oracle.com/javase/9/install/installation-jdk-and-jre-macos.htm#JSJIG-GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE
         """
 
+
 class AwsCliCheck(Check):
     remedy = """
         Need to install the AWS CLI tool.
@@ -84,6 +87,7 @@ class AwsCliCheck(Check):
     def is_ok(self):
         return self._check_command_succeeds(["aws", "help"])
 
+
 class AzureCliCheck(Check):
     remedy = """
         Need to install the Azure CLI tool.
@@ -98,6 +102,7 @@ class AzureCliCheck(Check):
 
     def is_ok(self):
         return self._check_command_succeeds(["az"])
+
 
 class AzureCliVersionCheck(Check):
     MIN_VERSION = "2.34.1"
@@ -122,6 +127,7 @@ class AzureCliVersionCheck(Check):
 
         return azure_cli_version_string and self.version_greater_than(self.MIN_VERSION, azure_cli_version_string)
 
+
 class AwsLoginCheck(Check):
     remedy = """
         Need to configure AWS CLI tool. Run `aws configure` and enter credentials
@@ -136,10 +142,12 @@ class AwsLoginCheck(Check):
         return self._get_cloud_provider() not in ['aws', 'azure']
 
     def is_ok(self):
-        output = self._get_command_output(["aws", "configure", "list-profiles"])
+        output = self._get_command_output(
+            ["aws", "configure", "list-profiles"])
 
         # the default profile will be present if they are logged in
         return 'default' in output
+
 
 class AzureLoginCheck(Check):
     remedy = """
@@ -155,6 +163,7 @@ class AzureLoginCheck(Check):
 
     def is_ok(self):
         return self._check_command_succeeds(["az", "ad", "signed-in-user", "show"])
+
 
 checks = [
     DockerCheck(),

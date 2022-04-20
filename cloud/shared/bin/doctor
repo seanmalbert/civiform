@@ -12,4 +12,4 @@ if ! which python3 > /dev/null; then
   exit 1
 fi
 
-exec "${PROJECT_BASE_DIR}/cloud/shared/bin/doctor_impl"
+exec "${PROJECT_BASE_DIR}/cloud/shared/pybin/doctor_impl.py"
