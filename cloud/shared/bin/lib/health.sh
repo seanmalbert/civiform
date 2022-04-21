@@ -12,7 +12,7 @@ function health::wait_for_success() {
 
     if [[ -n "${2}" ]]; then
       TIMEOUT=${2}
-    fi
+  fi
 
     local DEADLINE="$(($START_TIME + $TIMEOUT))"
     echo "Polling ${1} for successful response. This may take a few minutes"
@@ -22,14 +22,14 @@ function health::wait_for_success() {
         sleep 10
         local CURRENT_TIME=$(date +%s)
 
-        if (( "${CURRENT_TIME}" > "${DEADLINE}" )); then
+        if (("${CURRENT_TIME}" > "${DEADLINE}")); then
             echo "Deadline exceeded waiting for healthy endpoint" >&2
             exit 1
-        fi
+    fi
 
         echo "Time elapsed: $((${CURRENT_TIME} - ${START_TIME})) seconds"
         health_status="$(health::get_status "${1}")"
-    done
+  done
 }
 
 #######################################

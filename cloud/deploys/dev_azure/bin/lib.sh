@@ -9,5 +9,5 @@ for i in "$@"; do
         --tag=*)
         export IMAGE_TAG="${i#*=}"
         ;;
-    esac
+  esac
 done

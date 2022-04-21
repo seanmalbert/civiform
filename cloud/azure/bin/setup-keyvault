@@ -11,13 +11,12 @@ readonly TEMPORARY_SECRET="CHANGE ME"
 
 # DOC: Create key vault instance, set permissions, and generate and set secrets
 
-while getopts g:v:l: flag
-do
+while getopts g:v:l: flag; do
   case "${flag}" in
-    g) resource_group="${OPTARG}";;
-    v) vault_name="${OPTARG}";;
-    l) location="${OPTARG}";;
-    *) out::error "Unexpected getopts value ${flag}";;
+    g) resource_group="${OPTARG}" ;;
+    v) vault_name="${OPTARG}" ;;
+    l) location="${OPTARG}" ;;
+    *) out::error "Unexpected getopts value ${flag}" ;;
   esac
 done
 

@@ -73,7 +73,7 @@ ACCOUNT_KEY="$(az storage account keys list \
 export ARM_ACCESS_KEY="${ACCOUNT_KEY}"
 
 echo "generating the ${BACKEND_VARS_FILENAME} file"
-echo "resource_group_name  = \"${RESOURCE_GROUP_NAME}\"" > "${BACKEND_VARS_FILENAME}"
-echo "storage_account_name = \"${STORAGE_ACCOUNT_NAME}\"" >> "${BACKEND_VARS_FILENAME}"
-echo "container_name       = \"${CONTAINER_NAME}\"" >> "${BACKEND_VARS_FILENAME}"
-echo "key                  = \"terraform.tfstate\"" >> "${BACKEND_VARS_FILENAME}"
+echo "resource_group_name  = \"${RESOURCE_GROUP_NAME}\"" >"${BACKEND_VARS_FILENAME}"
+echo "storage_account_name = \"${STORAGE_ACCOUNT_NAME}\"" >>"${BACKEND_VARS_FILENAME}"
+echo "container_name       = \"${CONTAINER_NAME}\"" >>"${BACKEND_VARS_FILENAME}"
+echo "key                  = \"terraform.tfstate\"" >>"${BACKEND_VARS_FILENAME}"

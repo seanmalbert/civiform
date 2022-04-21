@@ -29,8 +29,8 @@ SG_ID=$(aws ec2 create-security-group \
     --vpc-id $VPC_ID \
     --query 'GroupId' \
     --output text) && echo "Created a new security group (ID: $SG_ID) for emergency access"
-MY_IPADDRESS=$(curl -s https://checkip.amazonaws.com) && \
-    echo "Authorize my IP ($MY_IPADDRESS) to access the security group"
+MY_IPADDRESS=$(curl -s https://checkip.amazonaws.com) \
+                                                      && echo "Authorize my IP ($MY_IPADDRESS) to access the security group"
 aws ec2 authorize-security-group-ingress \
     --group-id $SG_ID \
     --protocol tcp \
@@ -55,7 +55,7 @@ KEY_FILE=$KEY_NAME.pem
 aws ec2 create-key-pair \
     --key-name $KEY_NAME \
     --query 'KeyMaterial' \
-    --output text > $KEY_FILE
+    --output text >$KEY_FILE
 chmod 400 $KEY_FILE
 echo "Private key is stored locally as $KEY_FILE"
 
@@ -74,8 +74,8 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --security-group-ids $SG_ID \
     --subnet-id $SUBNET_ID \
     --query 'Instances[0].InstanceId' \
-    --output text) && \
-    echo "Created EC2 instance (ID: $INSTANCE_ID) and waiting for it to be ready. This may take 3-5 minutes."
+    --output text) \
+                   && echo "Created EC2 instance (ID: $INSTANCE_ID) and waiting for it to be ready. This may take 3-5 minutes."
 aws ec2 create-tags --resources $INSTANCE_ID \
     --tags Key=Name,Value=MyEmergencyDBAccessInstance$TIMESTAMP$ENVIRONMENT
 

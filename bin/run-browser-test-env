@@ -30,8 +30,8 @@ emulators::set_localstack_emulator_vars
 function set_args() {
   while [ "${1:-}" != "" ]; do
     case "$1" in
-    "--help")
-      cat <<-EOF
+      "--help")
+        cat <<-EOF
 Usage: bin/run-browser-test-env [options]
 
 Run a local civiform environment for the browser tests to exercise.
@@ -47,27 +47,27 @@ Options:
 --azure Use the Azure emulator (Azurite) for simulating cloud storage for file
         upload and download. Also use localstack, since we need that for SES.
 EOF
-      exit 0
-      ;;
+        exit 0
+        ;;
 
-    "--ci")
-      truth::enable continuous_integration
-      readonly COMPOSE_INTERACTIVE_NO_CLI=1
+      "--ci")
+        truth::enable continuous_integration
+        readonly COMPOSE_INTERACTIVE_NO_CLI=1
 
-      ;;
+        ;;
 
-    "--azure")
-      emulators::set_azurite_emulator_vars
-      # We do this because the Azurite tests need both emulators running to
-      # be successful. But, for AWS, we only want one emulator running,
-      # localstack.
-      truth::enable both_emulators
-      ;;
+      "--azure")
+        emulators::set_azurite_emulator_vars
+        # We do this because the Azurite tests need both emulators running to
+        # be successful. But, for AWS, we only want one emulator running,
+        # localstack.
+        truth::enable both_emulators
+        ;;
 
-    "--aws")
-      emulators::ensure_only_one_cloud_provider_flag aws
-      # Already defaulted to AWS.
-      ;;
+      "--aws")
+        emulators::ensure_only_one_cloud_provider_flag aws
+        # Already defaulted to AWS.
+        ;;
     esac
 
     shift

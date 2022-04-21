@@ -1,5 +1,6 @@
 # Allow opening any 'source'd file, even if not specified as input
 external-sources=true
+source-path=.
 
 # Turn on warnings for unquoted variables with safe values
 enable=quote-safe-variables

@@ -6,9 +6,9 @@ source bin/lib.sh
 
 docker::set_network_name_dev
 
-# The servers.json file is used to automatically configure 
+# The servers.json file is used to automatically configure
 # our database to show up in the pgadmin server tree
-tee /tmp/servers.json > /dev/null <<EOT
+tee /tmp/servers.json >/dev/null  <<EOT
 {
     "Servers": {
         "1": {
@@ -35,6 +35,6 @@ docker run \
   -e 'PGADMIN_CONFIG_SERVER_MODE=False' \
   -e 'PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False' \
   -v /tmp/servers.json:/pgadmin4/servers.json \
-  -d dpage/pgadmin4 
+  -d dpage/pgadmin4
 
 echo "Running pgadmin at http://localhost:8012"

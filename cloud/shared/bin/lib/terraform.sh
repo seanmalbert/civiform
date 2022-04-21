@@ -29,7 +29,7 @@ function terraform::perform_apply() {
 }
 
 #######################################
-# Copies the terraform backend_override to backend_override.tf (used to 
+# Copies the terraform backend_override to backend_override.tf (used to
 # make backend local instead of a shared state for dev deploys)
 # Globals:
 #   TERRAFORM_TEMPLATE_DIR

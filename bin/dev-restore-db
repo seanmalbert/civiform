@@ -10,7 +10,8 @@ if [[ ! -f "${1}" ]]; then
 fi
 
 # set TRUNCATE_SQL to heredoc contents
-TRUNCATE_SQL=$(cat <<EOF
+TRUNCATE_SQL=$(
+               cat <<EOF
 TRUNCATE TABLE files;
 TRUNCATE TABLE applications CASCADE;
 TRUNCATE TABLE applicants CASCADE;
