@@ -1,8 +1,11 @@
 package services.applicant;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import services.Path;
 import services.program.predicate.PredicateDefinition;
 import services.question.types.EnumeratorQuestionDefinition;
@@ -19,23 +22,26 @@ public abstract class RepeatedEntity {
    * parent.
    */
   public static ImmutableList<RepeatedEntity> createRepeatedEntities(
-      EnumeratorQuestionDefinition enumeratorQuestionDefinition, ApplicantData applicantData) {
+      EnumeratorQuestionDefinition enumeratorQuestionDefinition, Optional<PredicateDefinition> visibiity,
+      ApplicantData applicantData) {
     return RepeatedEntity.createRepeatedEntities(
-        Optional.empty(), enumeratorQuestionDefinition, applicantData);
+        Optional.empty(), enumeratorQuestionDefinition, visibiity, applicantData);
   }
   /**
    * Create all the nested repeated entities associated with the enumerator question, with this
    * repeated entity as their parent.
    */
   public ImmutableList<RepeatedEntity> createNestedRepeatedEntities(
-      EnumeratorQuestionDefinition enumeratorQuestionDefinition, ApplicantData applicantData) {
+      EnumeratorQuestionDefinition enumeratorQuestionDefinition, Optional<PredicateDefinition> visibiity,
+      ApplicantData applicantData) {
     return RepeatedEntity.createRepeatedEntities(
-        Optional.of(this), enumeratorQuestionDefinition, applicantData);
+        Optional.of(this), enumeratorQuestionDefinition, visibiity, applicantData);
   }
 
   private static ImmutableList<RepeatedEntity> createRepeatedEntities(
       Optional<RepeatedEntity> parent,
       EnumeratorQuestionDefinition enumeratorQuestionDefinition,
+      Optional<PredicateDefinition> visibiity,
       ApplicantData applicantData) {
     Path contextualizedEnumeratorPath =
         parent
@@ -47,18 +53,20 @@ public abstract class RepeatedEntity {
     ImmutableList.Builder<RepeatedEntity> repeatedEntitiesBuilder = ImmutableList.builder();
     for (int i = 0; i < entityNames.size(); i++) {
       repeatedEntitiesBuilder.add(
-          create(enumeratorQuestionDefinition, parent, entityNames.get(i), i));
+          create(enumeratorQuestionDefinition, visibiity, parent, entityNames.get(i), i));
     }
     return repeatedEntitiesBuilder.build();
   }
 
   private static RepeatedEntity create(
       EnumeratorQuestionDefinition enumeratorQuestionDefinition,
+      Optional<PredicateDefinition> visibiity,
       Optional<RepeatedEntity> parent,
       String entityName,
       int index) {
     assert enumeratorQuestionDefinition.isEnumerator();
-    return new AutoValue_RepeatedEntity(enumeratorQuestionDefinition, parent, entityName, index);
+    Preconditions.checkNotNull(visibiity);
+    return new AutoValue_RepeatedEntity(enumeratorQuestionDefinition, visibiity, parent, entityName, index);
   }
 
   /**
@@ -67,11 +75,15 @@ public abstract class RepeatedEntity {
    */
   public abstract EnumeratorQuestionDefinition enumeratorQuestionDefinition();
 
+  /** The visibility of this entity's block. */
+  public abstract Optional<PredicateDefinition> visibility();
+
   /** If this is a nested repeated entity, this returns the immediate parent repeated entity. */
   public abstract Optional<RepeatedEntity> parent();
 
   /** The entity name provided by the applicant. */
   public abstract String entityName();
+
 
   /**
    * The positional index of this repeated entity with respect to the other repeated entities for
@@ -94,17 +106,13 @@ public abstract class RepeatedEntity {
   }
 
   /**
-   * Gets visibility for all parents of the repeated entity.
+   * Gets visibility for this and all parents of the repeated entity.
    */
-  public ImmutableList<PredicateDefinition> parentVisibility() {
-    return parent().map(p -> p.parentVisibility())
-        .orElse(ImmutableList.<PredicateDefinition>of());
-
-    // ImmutableList<PredicateDefinition> visibilityPredicates = Stream
-    // .concat(parentVisibilityPredicates.stream(),
-    // block.getVisibilityPredicate().stream())
-    // .collect(ImmutableList.toImmutableList());
-    // return updatedText.replace(target, entityName());
+  public ImmutableList<PredicateDefinition> nestedVisibility() {
+    return Stream.concat(
+        parent().map(p -> p.nestedVisibility()).orElse(ImmutableList.<PredicateDefinition>of()).stream(),
+        this.visibility().stream())
+        .collect(ImmutableList.toImmutableList());
   }
 
   /**
@@ -112,7 +120,8 @@ public abstract class RepeatedEntity {
    *
    * <p>
    * Replaces "\$this" with this repeated entity's name. "\$this.parent" and
-   * "\$this.parent.parent" (ad infinitum) are replaced with the names of the
+   * "\$this.parent.parent" (ad infinitum) are replaced with the names of
+   * theUserRepository.java:89
    * ancestors of this
    * repeated entity.
    */

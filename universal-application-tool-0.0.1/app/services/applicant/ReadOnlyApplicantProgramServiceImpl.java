@@ -71,7 +71,6 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
       System.out.println("getAllActiveBlocks call getBlocks");
       System.out.println(allBlockList);
     }
-
     return allBlockList;
   }
 
@@ -248,13 +247,12 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
         EnumeratorQuestionDefinition enumeratorQuestionDefinition =
             blockDefinition.getEnumerationQuestionDefinition();
         ImmutableList<RepeatedEntity> repeatedEntities =
-            maybeRepeatedEntity.isPresent()
-                ? maybeRepeatedEntity
-                    .get()
-                    .createNestedRepeatedEntities(enumeratorQuestionDefinition, applicantData)
-                : RepeatedEntity.createRepeatedEntities(
-                    enumeratorQuestionDefinition, applicantData);
-
+            maybeRepeatedEntity
+                .map(e -> e.createNestedRepeatedEntities(enumeratorQuestionDefinition, block.getVisibilityPredicate(),
+                    applicantData))
+                .orElse(RepeatedEntity.createRepeatedEntities(
+                    enumeratorQuestionDefinition,
+                    block.getVisibilityPredicate(), applicantData));
         // For each repeated entity, recursively build blocks for all of the repeated blocks of this
         // enumerator block.
         ImmutableList<BlockDefinition> repeatedBlockDefinitions =
@@ -277,6 +275,10 @@ public class ReadOnlyApplicantProgramServiceImpl implements ReadOnlyApplicantPro
 
   private boolean showBlock(Block block) {
     if (block.getRepeatedEntity().isPresent()) {
+      // ImmutableList<PredicateDefinition> nestedVisibility =
+      // block.getRepeatedEntity().get().nestedVisibility();
+      // System.out.println("nestedVisibility");
+      // System.out.println(nestedVisibility);
 
     }
     if (block.getVisibilityPredicate().isEmpty()) {

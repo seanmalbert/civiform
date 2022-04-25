@@ -3,6 +3,8 @@ package controllers.applicant;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
+import java.util.Arrays;
+
 import auth.ProfileUtils;
 import com.google.common.collect.ImmutableList;
 import controllers.CiviFormController;
@@ -28,6 +30,7 @@ import services.program.ProgramDefinition;
 import services.program.ProgramNotFoundException;
 import views.applicant.ApplicantProgramInfoView;
 import views.applicant.ProgramIndexView;
+import services.applicant.ReadOnlyApplicantProgramService;
 
 /**
  * Controller for handling methods for an applicant applying to programs. CAUTION: you must
@@ -128,7 +131,7 @@ public class ApplicantProgramsController extends CiviFormController {
                   return unauthorized();
                 }
               }
-              throw new RuntimeException(ex);
+              throw new RuntimeException(ex.getCause());
             });
   }
 
