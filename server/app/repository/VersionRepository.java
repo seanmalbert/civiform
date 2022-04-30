@@ -48,6 +48,8 @@ public class VersionRepository {
     this.programRepository = checkNotNull(programRepository);
   }
 
+  public void publishSingleVersion(long id) {}
+
   /**
    * Publish a new version of all programs and questions. All DRAFT programs/questions will become
    * ACTIVE, and all ACTIVE programs/questions without a draft will be copied to the next version.

@@ -113,6 +113,11 @@ public class AdminProgramController extends CiviFormController {
     }
   }
 
+  @Secure(authorizers = Authorizers.Labels.CIVIFORM_ADMIN)
+  public Result publishSingle(Request request, long id) {
+    
+  }
+
   /** POST endpoint for creating a new draft version of the program. */
   @Secure(authorizers = Authorizers.Labels.CIVIFORM_ADMIN)
   public Result newVersionFrom(Request request, long id) {

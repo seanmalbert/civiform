@@ -92,6 +92,12 @@ public class ProgramAdministratorProgramListView extends BaseHtmlView {
     String blockCountText = "Screens: " + displayProgram.getBlockCount();
     String questionCountText = "Questions: " + displayProgram.getQuestionCount();
 
+    ContainerTag publishModalContent = 
+        div()
+        .withClasses(Styles.FLEX, Styles.FLEX_COL, Styles.GAP_4)
+        .with(p("Are you sure you want to publish this program?").withClasses(Styles.P_2))
+        .with(maybeRenderPublishButton(programs, request));
+
     Tag topContent =
         div(
                 div(
@@ -100,6 +106,7 @@ public class ProgramAdministratorProgramListView extends BaseHtmlView {
                         .withClasses(
                             Styles.TEXT_BLACK, Styles.FONT_BOLD, Styles.TEXT_XL, Styles.MB_2)),
                 p().withClasses(Styles.FLEX_GROW),
+                div()
                 div(p(blockCountText), p(questionCountText))
                     .withClasses(
                         Styles.TEXT_RIGHT,
